@@ -1,0 +1,21 @@
+apiVersion: v2
+name: garage
+description: S3-compatible object store for small self-hosted geo-distributed deployments with optional web UI
+type: application
+version: 0.10.0
+appVersion: "v2.2.0"
+home: https://garagehq.deuxfleurs.fr/
+icon: https://garagehq.deuxfleurs.fr/images/garage-logo.svg
+
+keywords:
+  - geo-distributed
+  - read-after-write-consistency
+  - s3-compatible
+
+sources:
+  - https://git.deuxfleurs.fr/Deuxfleurs/garage.git
+  - https://github.com/cloudlena/s3manager
+
+maintainers:
+  - name: Ammar Lakis
+    url: https://github.com/ammarlakis

@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+
+      - name: Validate Renovate config JSON
+        run: python3 -m json.tool renovate.json >/dev/null
+
+      - name: Check release script syntax
+        run: bash -n scripts/release.sh
+
+      - name: Lint Helm chart
+        run: helm lint charts/garage
+
+      - name: Lint production example
+        run: helm lint charts/garage -f charts/garage/values.production.example.yaml
+
+      - name: Render Helm chart
+        run: helm template garage charts/garage >/dev/null
+
+      - name: Render UI-enabled chart
+        run: helm template garage charts/garage --set ui.enabled=true >/dev/null
+
+      - name: Render production example
+        run: helm template garage charts/garage -f charts/garage/values.production.example.yaml >/dev/null
+
+      - name: Package Helm chart
+        run: helm package charts/garage --destination dist

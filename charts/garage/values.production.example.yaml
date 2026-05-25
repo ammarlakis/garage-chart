@@ -1,0 +1,182 @@
+commonLabels:
+  app.kubernetes.io/part-of: object-storage
+
+commonAnnotations:
+  example.com/managed-by: platform
+
+garage:
+  replicationFactor: "3"
+  consistencyMode: consistent
+  s3:
+    api:
+      region: garage
+      rootDomain: .s3.example.com
+    web:
+      rootDomain: .web.example.com
+
+persistence:
+  enabled: true
+  meta:
+    size: 10Gi
+    storageClass: fast-replicated
+    accessModes:
+      - ReadWriteOnce
+  data:
+    size: 500Gi
+    storageClass: bulk-replicated
+    accessModes:
+      - ReadWriteOnce
+
+deployment:
+  replicaCount: 3
+  updateStrategy:
+    type: RollingUpdate
+  minReadySeconds: 10
+  terminationGracePeriodSeconds: 60
+
+image:
+  repository: dxflrs/amd64_garage
+  tag: v2.2.0
+  pullPolicy: IfNotPresent
+
+initImage:
+  repository: busybox
+  tag: stable
+  pullPolicy: IfNotPresent
+
+serviceAccount:
+  create: true
+  automount: true
+
+podAnnotations:
+  prometheus.io/path: /metrics
+  prometheus.io/port: "3903"
+  prometheus.io/scrape: "true"
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    memory: 2Gi
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: admin
+  initialDelaySeconds: 30
+  periodSeconds: 30
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: admin
+  initialDelaySeconds: 10
+  periodSeconds: 10
+
+startupProbe:
+  httpGet:
+    path: /health
+    port: admin
+  failureThreshold: 30
+  periodSeconds: 10
+
+service:
+  type: ClusterIP
+
+ingress:
+  s3:
+    api:
+      enabled: true
+      className: nginx
+      hosts:
+        - host: s3.example.com
+          paths:
+            - path: /
+              pathType: Prefix
+        - host: "*.s3.example.com"
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - secretName: garage-s3-tls
+          hosts:
+            - s3.example.com
+            - "*.s3.example.com"
+    web:
+      enabled: true
+      className: nginx
+      hosts:
+        - host: "*.web.example.com"
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - secretName: garage-web-tls
+          hosts:
+            - "*.web.example.com"
+
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: kubernetes.io/hostname
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels:
+        app.kubernetes.io/name: garage
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 2
+
+monitoring:
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      interval: 30s
+      scrapeTimeout: 10s
+
+ui:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: cloudlena/s3manager
+    tag: latest
+    pullPolicy: IfNotPresent
+  serviceAccount:
+    create: true
+    automount: false
+  service:
+    type: ClusterIP
+    port: 8080
+  ingress:
+    enabled: true
+    className: nginx
+    hosts:
+      - host: garage-ui.example.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: garage-ui-tls
+        hosts:
+          - garage-ui.example.com
+  s3:
+    existingSecret: garage-ui-s3-credentials
+    region: garage
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      memory: 256Mi
+  podDisruptionBudget:
+    enabled: true
+    maxUnavailable: 1
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/name: garage-ui

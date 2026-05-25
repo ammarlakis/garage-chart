@@ -1,0 +1,154 @@
+name: Release Charts
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      release_name:
+        description: "Release tag to publish, for example v0.10.0"
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  meta:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.release.outputs.tag }}
+      version: ${{ steps.release.outputs.version }}
+      chart: ${{ steps.release.outputs.chart }}
+      chart_asset: ${{ steps.release.outputs.chart_asset }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Resolve release metadata
+        id: release
+        shell: bash
+        env:
+          RELEASE_NAME: ${{ inputs.release_name }}
+        run: |
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            tag="${GITHUB_REF_NAME}"
+          elif [[ -n "${RELEASE_NAME:-}" ]]; then
+            tag="${RELEASE_NAME}"
+          else
+            version="$(awk '/^version:/ { print $2; exit }' charts/garage/Chart.yaml)"
+            tag="v${version}"
+          fi
+
+          if [[ ! "${tag}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([-+][0-9A-Za-z.-]+)?$ ]]; then
+            echo "Release tag must look like v0.10.0: ${tag}" >&2
+            exit 1
+          fi
+
+          version="${tag#v}"
+          chart="$(awk '/^name:/ { print $2; exit }' charts/garage/Chart.yaml)"
+          chart_asset="${chart}-${version}.tgz"
+
+          echo "tag=${tag}" >> "${GITHUB_OUTPUT}"
+          echo "version=${version}" >> "${GITHUB_OUTPUT}"
+          echo "chart=${chart}" >> "${GITHUB_OUTPUT}"
+          echo "chart_asset=${chart_asset}" >> "${GITHUB_OUTPUT}"
+
+  release:
+    needs: meta
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    outputs:
+      chart_asset: ${{ steps.package.outputs.asset }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+
+      - name: Set up git-cliff
+        uses: kenji-miyake/setup-git-cliff@v2
+
+      - name: Validate chart version
+        shell: bash
+        run: |
+          chart_version="$(awk '/^version:/ { print $2; exit }' charts/garage/Chart.yaml)"
+
+          if [[ "${chart_version}" != "${{ needs.meta.outputs.version }}" ]]; then
+            echo "Chart version ${chart_version} does not match ${{ needs.meta.outputs.tag }}" >&2
+            exit 1
+          fi
+
+      - name: Package Helm chart
+        id: package
+        shell: bash
+        run: |
+          mkdir -p dist
+          helm lint charts/garage
+          helm lint charts/garage -f charts/garage/values.production.example.yaml
+          helm template garage charts/garage >/dev/null
+          helm template garage charts/garage -f charts/garage/values.production.example.yaml >/dev/null
+          helm package charts/garage --destination dist
+          file="dist/${{ needs.meta.outputs.chart_asset }}"
+          test -f "${file}"
+          echo "file=${file}" >> "${GITHUB_OUTPUT}"
+          echo "asset=${{ needs.meta.outputs.chart_asset }}" >> "${GITHUB_OUTPUT}"
+
+      - name: Generate changelog
+        id: changelog
+        shell: bash
+        run: |
+          printf 'changelog<<EOF\n' >> "${GITHUB_OUTPUT}"
+          if git rev-parse "${{ needs.meta.outputs.tag }}" >/dev/null 2>&1; then
+            git cliff -l >> "${GITHUB_OUTPUT}"
+          else
+            git cliff --unreleased --tag "${{ needs.meta.outputs.tag }}" >> "${GITHUB_OUTPUT}"
+          fi
+          printf 'EOF\n' >> "${GITHUB_OUTPUT}"
+
+      - name: Create GitHub Release and upload asset
+        uses: softprops/action-gh-release@v2.4.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ needs.meta.outputs.tag }}
+          name: ${{ needs.meta.outputs.tag }}
+          body: ${{ steps.changelog.outputs.changelog }}
+          draft: false
+          prerelease: false
+          files: ${{ steps.package.outputs.file }}
+          overwrite_files: true
+          make_latest: true
+
+  update-registry:
+    needs:
+      - meta
+      - release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: 2336325
+          private-key: ${{ secrets.UPDATE_REGISTRY_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+
+      - name: Trigger registry update
+        uses: the-actions-org/workflow-dispatch@v4
+        with:
+          repo: "ammarlakis/helm-charts"
+          workflow: Add Chart to Helm Repository
+          ref: "master"
+          wait-for-completion: false
+          inputs: |
+            {
+              "repository": "${{ github.repository }}",
+              "release_name": "${{ needs.meta.outputs.tag }}",
+              "chart_asset": "${{ needs.release.outputs.chart_asset }}"
+            }
+          token: ${{ steps.app-token.outputs.token }}

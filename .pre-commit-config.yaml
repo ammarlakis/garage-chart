@@ -1,0 +1,14 @@
+repos:
+  - repo: local
+    hooks:
+      - id: generate-docs
+        name: generate-docs
+        entry: just docs
+        language: system
+        pass_filenames: false
+        files: ^charts/garage/(Chart.yaml|values.yaml|README.md\.gotmpl)$
+
+  - repo: https://github.com/rbubley/mirrors-prettier
+    rev: "v3.6.2"
+    hooks:
+      - id: prettier

@@ -1,0 +1,152 @@
+{{- if .Values.ui.enabled -}}
+{{- $secretName := required "ui.s3.existingSecret is required when ui.enabled is true" .Values.ui.s3.existingSecret -}}
+{{- $imagePullSecrets := .Values.ui.imagePullSecrets | default .Values.imagePullSecrets -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "garage.uiFullname" . }}
+  labels:
+    {{- include "garage.uiLabels" . | nindent 4 }}
+  {{- with .Values.commonAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.ui.replicaCount }}
+  {{- with .Values.ui.revisionHistoryLimit }}
+  revisionHistoryLimit: {{ . }}
+  {{- end }}
+  {{- with .Values.ui.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "garage.uiSelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.ui.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "garage.uiLabels" . | nindent 8 }}
+        {{- with .Values.ui.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      terminationGracePeriodSeconds: {{ .Values.ui.terminationGracePeriodSeconds }}
+      serviceAccountName: {{ include "garage.uiServiceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.ui.serviceAccount.automount }}
+      {{- with $imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.ui.priorityClassName }}
+      priorityClassName: {{ . | quote }}
+      {{- end }}
+      {{- with .Values.ui.runtimeClassName }}
+      runtimeClassName: {{ . | quote }}
+      {{- end }}
+      {{- with .Values.ui.schedulerName }}
+      schedulerName: {{ . | quote }}
+      {{- end }}
+      {{- with .Values.ui.dnsPolicy }}
+      dnsPolicy: {{ . }}
+      {{- end }}
+      {{- with .Values.ui.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.ui.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.ui.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.ui.podSecurityContext | nindent 8 }}
+      containers:
+        - name: s3manager
+          image: {{ include "garage.uiImage" . | quote }}
+          imagePullPolicy: {{ .Values.ui.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.ui.securityContext | nindent 12 }}
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: ENDPOINT
+              value: {{ include "garage.uiEndpoint" . | quote }}
+            - name: REGION
+              value: {{ .Values.ui.s3.region | quote }}
+            - name: USE_SSL
+              value: {{ .Values.ui.s3.useSSL | toString | quote }}
+            - name: SKIP_SSL_VERIFICATION
+              value: {{ .Values.ui.s3.skipSSLVerification | toString | quote }}
+            - name: SIGNATURE_TYPE
+              value: {{ .Values.ui.s3.signatureType | quote }}
+            - name: ALLOW_DELETE
+              value: {{ .Values.ui.features.allowDelete | toString | quote }}
+            - name: FORCE_DOWNLOAD
+              value: {{ .Values.ui.features.forceDownload | toString | quote }}
+            - name: LIST_RECURSIVE
+              value: {{ .Values.ui.features.listRecursive | toString | quote }}
+            - name: ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $secretName }}
+                  key: {{ .Values.ui.s3.accessKeyKey }}
+            - name: SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $secretName }}
+                  key: {{ .Values.ui.s3.secretAccessKeyKey }}
+            {{- with .Values.ui.env }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- with .Values.ui.envFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.ui.extraVolumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.ui.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.ui.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.ui.startupProbe }}
+          startupProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.ui.lifecycle }}
+          lifecycle:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.ui.resources | nindent 12 }}
+      {{- with .Values.ui.extraVolumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.ui.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.ui.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.ui.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
