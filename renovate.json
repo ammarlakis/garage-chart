@@ -1,35 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
-  "timezone": "Europe/Berlin",
-  "schedule": ["before 6am on monday"],
-  "dependencyDashboard": true,
-  "semanticCommits": "enabled",
-  "rangeStrategy": "bump",
-  "pinDigests": true,
-  "labels": ["dependencies"],
+  "extends": ["config:recommended"],
   "packageRules": [
-    {
-      "matchManagers": ["github-actions"],
-      "groupName": "GitHub Actions",
-      "semanticCommitType": "ci",
-      "pinDigests": true
-    },
-    {
-      "matchManagers": ["helm-values"],
-      "groupName": "Helm values images",
-      "semanticCommitType": "build",
-      "pinDigests": true
-    },
     {
       "matchPackageNames": ["dxflrs/amd64_garage"],
       "groupName": "Garage image",
-      "semanticCommitType": "build",
-      "pinDigests": true
-    },
-    {
-      "matchUpdateTypes": ["digest"],
-      "groupName": "Dependency digests",
       "semanticCommitType": "build"
     }
   ]
