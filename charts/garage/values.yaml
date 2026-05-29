@@ -115,7 +115,7 @@ image:
   # -- default to amd64 docker image
   repository: dxflrs/amd64_garage
   # -- Garage image tag. Keep explicit so Renovate can update and pin digests.
-  tag: "v2.2.0"
+  tag: "v2.3.0@sha256:dac0c92add4f1a0b41035e94b41036a270ffbe88a37c7ac9c3f19e6dc5bdccf2"
   pullPolicy: IfNotPresent
 
 initImage:
