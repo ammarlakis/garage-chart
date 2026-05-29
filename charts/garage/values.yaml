@@ -116,15 +116,11 @@ image:
   repository: dxflrs/amd64_garage
   # -- Garage image tag. Keep explicit so Renovate can update and pin digests.
   tag: "v2.2.0"
-  # -- Garage image digest. When set, renders repository@digest.
-  digest: ""
   pullPolicy: IfNotPresent
 
 initImage:
   repository: busybox
   tag: stable
-  # -- Init image digest. When set, renders repository@digest.
-  digest: ""
   pullPolicy: IfNotPresent
 
 # -- set if you need credentials to pull your custom image
@@ -356,8 +352,6 @@ ui:
     repository: cloudlena/s3manager
     # -- Garage UI image tag.
     tag: latest
-    # -- Garage UI image digest. When set, renders repository@digest.
-    digest: ""
     pullPolicy: IfNotPresent
 
   # -- Garage UI image pull secrets. Defaults to imagePullSecrets when empty.

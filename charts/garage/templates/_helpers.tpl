@@ -42,9 +42,7 @@ Create the Garage container image reference.
 */}}
 {{- define "garage.image" -}}
 {{- $tag := .Values.image.tag | default .Chart.AppVersion -}}
-{{- if .Values.image.digest -}}
-{{- printf "%s@%s" .Values.image.repository .Values.image.digest -}}
-{{- else if hasPrefix "@" $tag -}}
+{{- if hasPrefix "@" $tag -}}
 {{- printf "%s%s" .Values.image.repository $tag -}}
 {{- else -}}
 {{- printf "%s:%s" .Values.image.repository $tag -}}
@@ -55,9 +53,7 @@ Create the Garage container image reference.
 Create the Garage init container image reference.
 */}}
 {{- define "garage.initImage" -}}
-{{- if .Values.initImage.digest -}}
-{{- printf "%s@%s" .Values.initImage.repository .Values.initImage.digest -}}
-{{- else if hasPrefix "@" .Values.initImage.tag -}}
+{{- if hasPrefix "@" .Values.initImage.tag -}}
 {{- printf "%s%s" .Values.initImage.repository .Values.initImage.tag -}}
 {{- else -}}
 {{- printf "%s:%s" .Values.initImage.repository .Values.initImage.tag -}}
@@ -68,9 +64,7 @@ Create the Garage init container image reference.
 Create the Garage UI container image reference.
 */}}
 {{- define "garage.uiImage" -}}
-{{- if .Values.ui.image.digest -}}
-{{- printf "%s@%s" .Values.ui.image.repository .Values.ui.image.digest -}}
-{{- else if hasPrefix "@" .Values.ui.image.tag -}}
+{{- if hasPrefix "@" .Values.ui.image.tag -}}
 {{- printf "%s%s" .Values.ui.image.repository .Values.ui.image.tag -}}
 {{- else -}}
 {{- printf "%s:%s" .Values.ui.image.repository .Values.ui.image.tag -}}
