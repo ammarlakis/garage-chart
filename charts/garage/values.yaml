@@ -115,12 +115,12 @@ image:
   # -- default to amd64 docker image
   repository: dxflrs/amd64_garage
   # -- Garage image tag. Keep explicit so Renovate can update and pin digests.
-  tag: "v2.2.0"
+  tag: "v2.3.0@sha256:dac0c92add4f1a0b41035e94b41036a270ffbe88a37c7ac9c3f19e6dc5bdccf2"
   pullPolicy: IfNotPresent
 
 initImage:
   repository: busybox
-  tag: stable
+  tag: stable@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662
   pullPolicy: IfNotPresent
 
 # -- set if you need credentials to pull your custom image
@@ -351,7 +351,7 @@ ui:
     # -- Garage UI image repository.
     repository: cloudlena/s3manager
     # -- Garage UI image tag.
-    tag: latest
+    tag: latest@sha256:ce284dfa310e390759613a02bd12689ebe27fbbaeba4083328b19e4559b4d969
     pullPolicy: IfNotPresent
 
   # -- Garage UI image pull secrets. Defaults to imagePullSecrets when empty.
