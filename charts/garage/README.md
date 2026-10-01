@@ -1,6 +1,6 @@
 # garage
 
-![Version: 0.10.1](https://img.shields.io/badge/Version-0.10.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.2.0](https://img.shields.io/badge/AppVersion-v2.2.0-informational?style=flat-square)
+![Version: 0.10.2](https://img.shields.io/badge/Version-0.10.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.4.1](https://img.shields.io/badge/AppVersion-v2.4.1-informational?style=flat-square)
 
 S3-compatible object store for small self-hosted geo-distributed deployments with optional web UI
 
@@ -66,7 +66,7 @@ S3-compatible object store for small self-hosted geo-distributed deployments wit
 | hostAliases | list | `[]` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"dxflrs/amd64_garage"` | default to amd64 docker image |
-| image.tag | string | `"v2.3.0@sha256:dac0c92add4f1a0b41035e94b41036a270ffbe88a37c7ac9c3f19e6dc5bdccf2"` | Garage image tag. Keep explicit so Renovate can update and pin digests. |
+| image.tag | string | `"v2.4.1@sha256:0d7c74fc8ca6fef68a5a941c0e7558c8b1e92ba3588fa7505400e1350456c796"` | Garage image tag. Keep explicit so Renovate can update and pin digests. |
 | imagePullSecrets | list | `[]` | set if you need credentials to pull your custom image |
 | ingress.s3.api.annotations | object | `{}` |  |
 | ingress.s3.api.className | string | `""` | Rely _either_ on the className or the annotation below but not both! If you want to use the className, set className: "nginx" and replace "nginx" by an Ingress controller name, examples [here](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers). |
