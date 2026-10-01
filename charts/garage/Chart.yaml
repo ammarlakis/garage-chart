@@ -3,6 +3,7 @@ name: garage
 description: S3-compatible object store for small self-hosted geo-distributed deployments with optional web UI
 type: application
 version: 0.10.0
+# renovate: image=dxflrs/amd64_garage
 appVersion: "v2.2.0"
 home: https://garagehq.deuxfleurs.fr/
 icon: https://garagehq.deuxfleurs.fr/images/garage-logo.svg
@@ -17,5 +18,5 @@ sources:
   - https://github.com/cloudlena/s3manager
 
 maintainers:
-  - name: Ammar Lakis
+  - name: ammarlakis
     url: https://github.com/ammarlakis

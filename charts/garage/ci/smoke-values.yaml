@@ -1,0 +1,18 @@
+garage:
+  replicationFactor: "1"
+
+deployment:
+  replicaCount: 1
+
+persistence:
+  enabled: false
+
+monitoring:
+  metrics:
+    enabled: true
+
+readinessProbe:
+  httpGet:
+    path: /metrics
+    port: admin
+  periodSeconds: 5

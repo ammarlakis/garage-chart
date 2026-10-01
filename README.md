@@ -27,10 +27,6 @@ The credentials Secret must contain the keys configured by `ui.s3.accessKeyKey` 
 
 The chart includes `charts/garage/values.production.example.yaml` with a production-oriented baseline for persistence, resources, probes, ingress, monitoring, topology spread constraints, PodDisruptionBudgets, and the optional UI. Values are validated by `charts/garage/values.schema.json`.
 
-## Release
-
-Run `just release` to prepare a chart release locally. Pushing a `v*` tag triggers the release workflow, uploads the packaged chart to GitHub Releases, and dispatches the Helm registry update workflow.
-
 ## License
 
 This project is licensed under the MIT License.
