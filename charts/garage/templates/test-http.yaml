@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ printf "%s-test-http" (include "garage.fullname" . | trunc 53 | trimSuffix "-") }}
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  restartPolicy: Never
+  activeDeadlineSeconds: 60
+  automountServiceAccountToken: false
+  containers:
+    - name: http
+      image: curlimages/curl:8.14.1
+      command: ["sh", "-ec"]
+      args:
+        - |
+          test "$(curl -sS --max-time 10 -o /dev/null -w '%{http_code}' -X OPTIONS "$S3_URL")" = 200
+          test "$(curl -sS --max-time 10 -o /tmp/s3.xml -w '%{http_code}' "$S3_URL")" = 403
+          grep -q '<Code>AccessDenied</Code>' /tmp/s3.xml
+          {{- if .Values.monitoring.metrics.enabled }}
+          curl -fsS --max-time 10 "$METRICS_URL" -o /tmp/metrics
+          grep -q '^garage_build_info' /tmp/metrics
+          {{- end }}
+      env:
+        - name: S3_URL
+          value: {{ printf "http://%s:%v/" (include "garage.fullname" .) .Values.service.s3.api.port | quote }}
+        {{- if .Values.monitoring.metrics.enabled }}
+        - name: METRICS_URL
+          value: {{ printf "http://%s-metrics:3903/metrics" (include "garage.fullname" .) | quote }}
+        {{- end }}

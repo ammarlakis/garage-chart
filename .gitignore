@@ -1,3 +1,5 @@
 dist/
 *.tgz
 .DS_Store
+/.cocoindex_code/
+/release-notes.md

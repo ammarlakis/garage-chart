@@ -1,7 +1,8 @@
-# git-cliff configuration
+# git-cliff ~ configuration file
 # https://git-cliff.org/docs/configuration
 
 [changelog]
+header = "# Changelog"
 body = """
 {% if version %}\
     ## [{{ version | trim_start_matches(pat="v") }}] - {{ timestamp | date(format="%Y-%m-%d") }}
@@ -10,46 +11,32 @@ body = """
 {% endif %}\
 {% for group, commits in commits | group_by(attribute="group") %}
     ### {{ group | striptags | trim | upper_first }}
+    {% if group == "Dependencies" %}\
+        {% set commits = commits | reverse | unique(attribute="scope") %}\
+    {% endif %}\
     {% for commit in commits %}
-        - {% if commit.scope %}*({{ commit.scope }})* {% endif %}\
+        - {% if commit.scope and group != "Dependencies" %}*({{ commit.scope }})* {% endif %}\
             {% if commit.breaking %}[**breaking**] {% endif %}\
             {{ commit.message | upper_first }}\
     {% endfor %}
 {% endfor %}
 """
-trim = true
-render_always = true
-postprocessors = []
 
 [git]
-conventional_commits = true
-filter_unconventional = true
-require_conventional = false
-split_commits = false
-commit_preprocessors = []
-protect_breaking_commits = false
+include_paths = ["charts/garage/**"]
+exclude_paths = [
+  "**/*.md",
+  "charts/garage/ci/**",
+]
+tag_pattern = "^v[0-9]+\\.[0-9]+\\.[0-9]+$"
 commit_parsers = [
-  { message = "^feat", group = "<!-- 0 -->Features" },
-  { message = "^fix", group = "<!-- 1 -->Bug Fixes" },
-  { message = "^refactor", group = "<!-- 2 -->Refactor" },
-  { message = "^doc", group = "<!-- 3 -->Documentation" },
-  { message = "^perf", group = "<!-- 4 -->Performance" },
-  { message = "^style", group = "<!-- 5 -->Styling" },
-  { message = "^test", group = "<!-- 6 -->Testing" },
-  { message = "^chore\\(release\\): prepare for", skip = true },
-  { message = "^chore\\(deps.*\\)", skip = true },
-  { message = "^chore\\(pr\\)", skip = true },
-  { message = "^chore\\(pull\\)", skip = true },
-  { message = "#ignore", skip = true },
-  { message = "^chore|^ci", group = "<!-- 7 -->Miscellaneous Tasks" },
-  { body = ".*security", group = "<!-- 8 -->Security" },
-  { message = "^revert", group = "<!-- 9 -->Revert" },
-  { message = ".*", group = "<!-- 10 -->Other" },
+  { field = "breaking", pattern = "true", group = "Breaking Changes" },
+  # Use the dependency name as the key for displaying only its latest update.
+  { message = '(?i)^(?:chore|fix)\(deps[^)]*\): (?:update|pin|roll back) (?:dependency |module |package |helm release )?(\S+)(?: action| docker (?:tag|digest))? to ', group = "Dependencies", scope = "${1}" },
+  # Grouped or unrecognized updates retain their full subject as a distinct key.
+  { message = '(?i)^(?:chore|fix)\(deps[^)]*\): ([^\r\n]+)', group = "Dependencies", scope = "${1}" },
+  { message = "^feat", group = "Features" },
+  { message = "^fix", group = "Bug Fixes" },
+  { message = "^perf", group = "Performance" },
 ]
 filter_commits = true
-link_parsers = []
-use_branch_tags = false
-topo_order = false
-topo_order_commits = true
-sort_commits = "oldest"
-recurse_submodules = false

@@ -1,11 +1,4 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
-  "packageRules": [
-    {
-      "matchPackageNames": ["dxflrs/amd64_garage"],
-      "groupName": "Garage image",
-      "semanticCommitType": "build"
-    }
-  ]
+  "extends": ["config:recommended"]
 }
