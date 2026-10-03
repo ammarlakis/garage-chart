@@ -104,7 +104,6 @@ jobs:
           workflow: Add Chart to Helm Repository
           ref: master
           wait-for-completion: true
-          sync-status: true
           inputs: |
             {
               "repository": "${{ github.repository }}",
