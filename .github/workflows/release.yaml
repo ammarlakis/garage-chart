@@ -103,7 +103,7 @@ jobs:
           repo: ammarlakis/helm-charts
           workflow: Add Chart to Helm Repository
           ref: master
-          wait-for-completion: true
+          wait-for-completion: false
           inputs: |
             {
               "repository": "${{ github.repository }}",
