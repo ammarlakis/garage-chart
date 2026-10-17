@@ -1,4 +1,10 @@
 # Changelog
+## [0.10.3] - 2026-10-17
+
+### Dependencies
+
+- Update cloudlena/s3manager:latest docker digest to 07ac8b5 (#24)
+
 ## [0.10.2] - 2026-10-01
 
 ### Dependencies

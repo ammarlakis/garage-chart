@@ -1,6 +1,6 @@
 # garage
 
-![Version: 0.10.2](https://img.shields.io/badge/Version-0.10.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.4.1](https://img.shields.io/badge/AppVersion-v2.4.1-informational?style=flat-square)
+![Version: 0.10.3](https://img.shields.io/badge/Version-0.10.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.4.1](https://img.shields.io/badge/AppVersion-v2.4.1-informational?style=flat-square)
 
 S3-compatible object store for small self-hosted geo-distributed deployments with optional web UI
 
@@ -166,7 +166,7 @@ S3-compatible object store for small self-hosted geo-distributed deployments wit
 | ui.hostAliases | list | `[]` |  |
 | ui.image.pullPolicy | string | `"IfNotPresent"` |  |
 | ui.image.repository | string | `"cloudlena/s3manager"` | Garage UI image repository. |
-| ui.image.tag | string | `"latest@sha256:ce284dfa310e390759613a02bd12689ebe27fbbaeba4083328b19e4559b4d969"` | Garage UI image tag. |
+| ui.image.tag | string | `"latest@sha256:07ac8b57e326c441de51ba8b91bfbd35f6674e4c03bc2b36eab1f70de25ba4af"` | Garage UI image tag. |
 | ui.imagePullSecrets | list | `[]` | Garage UI image pull secrets. Defaults to imagePullSecrets when empty. |
 | ui.ingress.annotations | object | `{}` | Garage UI Ingress annotations. |
 | ui.ingress.className | string | `""` | Garage UI Ingress class name. |
