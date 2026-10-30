@@ -4,7 +4,7 @@ description: S3-compatible object store for small self-hosted geo-distributed de
 type: application
 version: 0.10.3
 # renovate: image=dxflrs/amd64_garage
-appVersion: "v2.4.1"
+appVersion: "v2.5.0"
 home: https://garagehq.deuxfleurs.fr/
 icon: https://garagehq.deuxfleurs.fr/images/garage-logo.svg
 
