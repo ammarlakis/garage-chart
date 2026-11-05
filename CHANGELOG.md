@@ -1,4 +1,11 @@
 # Changelog
+## [0.10.4] - 2026-11-05
+
+### Dependencies
+
+- Update dxflrs/amd64_garage docker tag to v2.5.0 (#27)
+- Update cloudlena/s3manager:latest docker digest to fe749d7 (#26)
+
 ## [0.10.3] - 2026-10-17
 
 ### Dependencies

@@ -1,6 +1,6 @@
 # garage
 
-![Version: 0.10.3](https://img.shields.io/badge/Version-0.10.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.4.1](https://img.shields.io/badge/AppVersion-v2.4.1-informational?style=flat-square)
+![Version: 0.10.4](https://img.shields.io/badge/Version-0.10.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.5.0](https://img.shields.io/badge/AppVersion-v2.5.0-informational?style=flat-square)
 
 S3-compatible object store for small self-hosted geo-distributed deployments with optional web UI
 
@@ -66,7 +66,7 @@ S3-compatible object store for small self-hosted geo-distributed deployments wit
 | hostAliases | list | `[]` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"dxflrs/amd64_garage"` | default to amd64 docker image |
-| image.tag | string | `"v2.4.1@sha256:0d7c74fc8ca6fef68a5a941c0e7558c8b1e92ba3588fa7505400e1350456c796"` | Garage image tag. Keep explicit so Renovate can update and pin digests. |
+| image.tag | string | `"v2.5.0@sha256:23b16d34e0348d9aca9b960a7429a7e6d494974b5288bfb8f6c3ab856895f71e"` | Garage image tag. Keep explicit so Renovate can update and pin digests. |
 | imagePullSecrets | list | `[]` | set if you need credentials to pull your custom image |
 | ingress.s3.api.annotations | object | `{}` |  |
 | ingress.s3.api.className | string | `""` | Rely _either_ on the className or the annotation below but not both! If you want to use the className, set className: "nginx" and replace "nginx" by an Ingress controller name, examples [here](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers). |
@@ -166,7 +166,7 @@ S3-compatible object store for small self-hosted geo-distributed deployments wit
 | ui.hostAliases | list | `[]` |  |
 | ui.image.pullPolicy | string | `"IfNotPresent"` |  |
 | ui.image.repository | string | `"cloudlena/s3manager"` | Garage UI image repository. |
-| ui.image.tag | string | `"latest@sha256:07ac8b57e326c441de51ba8b91bfbd35f6674e4c03bc2b36eab1f70de25ba4af"` | Garage UI image tag. |
+| ui.image.tag | string | `"latest@sha256:fe749d7f684bec49e07e105ceab5923ae2f2d019c4a1737e6a0d10709909fa9d"` | Garage UI image tag. |
 | ui.imagePullSecrets | list | `[]` | Garage UI image pull secrets. Defaults to imagePullSecrets when empty. |
 | ui.ingress.annotations | object | `{}` | Garage UI Ingress annotations. |
 | ui.ingress.className | string | `""` | Garage UI Ingress class name. |
