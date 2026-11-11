@@ -120,7 +120,7 @@ image:
 
 initImage:
   repository: busybox
-  tag: stable@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662
+  tag: 1.36.1@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662
   pullPolicy: IfNotPresent
 
 # -- set if you need credentials to pull your custom image
@@ -351,7 +351,7 @@ ui:
     # -- Garage UI image repository.
     repository: cloudlena/s3manager
     # -- Garage UI image tag.
-    tag: latest@sha256:fe749d7f684bec49e07e105ceab5923ae2f2d019c4a1737e6a0d10709909fa9d
+    tag: v0.13.0@sha256:30d9900ccf305895f3ae7d954bc64e4d7b7e287fe4ba5a04c8b546e12dff3ff9
     pullPolicy: IfNotPresent
 
   # -- Garage UI image pull secrets. Defaults to imagePullSecrets when empty.

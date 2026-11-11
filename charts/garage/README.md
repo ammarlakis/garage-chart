@@ -84,7 +84,7 @@ S3-compatible object store for small self-hosted geo-distributed deployments wit
 | ingress.s3.web.tls | list | `[]` |  |
 | initImage.pullPolicy | string | `"IfNotPresent"` |  |
 | initImage.repository | string | `"busybox"` |  |
-| initImage.tag | string | `"stable@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662"` |  |
+| initImage.tag | string | `"1.36.1@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662"` |  |
 | livenessProbe | object | `{}` | Specifies a livenessProbe |
 | monitoring.metrics.enabled | bool | `false` | If true, a service for monitoring is created with a prometheus.io/scrape annotation |
 | monitoring.metrics.service.annotations | object | `{}` |  |
@@ -166,7 +166,7 @@ S3-compatible object store for small self-hosted geo-distributed deployments wit
 | ui.hostAliases | list | `[]` |  |
 | ui.image.pullPolicy | string | `"IfNotPresent"` |  |
 | ui.image.repository | string | `"cloudlena/s3manager"` | Garage UI image repository. |
-| ui.image.tag | string | `"latest@sha256:fe749d7f684bec49e07e105ceab5923ae2f2d019c4a1737e6a0d10709909fa9d"` | Garage UI image tag. |
+| ui.image.tag | string | `"v0.13.0@sha256:30d9900ccf305895f3ae7d954bc64e4d7b7e287fe4ba5a04c8b546e12dff3ff9"` | Garage UI image tag. |
 | ui.imagePullSecrets | list | `[]` | Garage UI image pull secrets. Defaults to imagePullSecrets when empty. |
 | ui.ingress.annotations | object | `{}` | Garage UI Ingress annotations. |
 | ui.ingress.className | string | `""` | Garage UI Ingress class name. |
