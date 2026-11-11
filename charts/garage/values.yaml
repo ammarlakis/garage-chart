@@ -351,7 +351,7 @@ ui:
     # -- Garage UI image repository.
     repository: cloudlena/s3manager
     # -- Garage UI image tag.
-    tag: latest@sha256:fe749d7f684bec49e07e105ceab5923ae2f2d019c4a1737e6a0d10709909fa9d
+    tag: latest@sha256:20f44197a0478ceaea7850b991af75e4f571699a757aed3cced39b6683da5d32
     pullPolicy: IfNotPresent
 
   # -- Garage UI image pull secrets. Defaults to imagePullSecrets when empty.
