@@ -1,4 +1,10 @@
 # Changelog
+## [0.10.6] - 2026-11-11
+
+### Dependencies
+
+- Update busybox docker tag to v1.38.0 (#30)
+
 ## [0.10.5] - 2026-11-11
 
 ### Dependencies

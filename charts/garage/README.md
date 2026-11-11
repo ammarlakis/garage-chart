@@ -1,6 +1,6 @@
 # garage
 
-![Version: 0.10.5](https://img.shields.io/badge/Version-0.10.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.5.0](https://img.shields.io/badge/AppVersion-v2.5.0-informational?style=flat-square)
+![Version: 0.10.6](https://img.shields.io/badge/Version-0.10.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.5.0](https://img.shields.io/badge/AppVersion-v2.5.0-informational?style=flat-square)
 
 S3-compatible object store for small self-hosted geo-distributed deployments with optional web UI
 
@@ -84,7 +84,7 @@ S3-compatible object store for small self-hosted geo-distributed deployments wit
 | ingress.s3.web.tls | list | `[]` |  |
 | initImage.pullPolicy | string | `"IfNotPresent"` |  |
 | initImage.repository | string | `"busybox"` |  |
-| initImage.tag | string | `"1.36.1@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662"` |  |
+| initImage.tag | string | `"1.38.0@sha256:a46257e06c82ad85242d0d38077d0a52d9896389ca60a1a59d3463db586e5fa4"` |  |
 | livenessProbe | object | `{}` | Specifies a livenessProbe |
 | monitoring.metrics.enabled | bool | `false` | If true, a service for monitoring is created with a prometheus.io/scrape annotation |
 | monitoring.metrics.service.annotations | object | `{}` |  |
