@@ -1,4 +1,10 @@
 # Changelog
+## [0.10.5] - 2026-11-11
+
+### Dependencies
+
+- Pin container images to release tags
+
 ## [0.10.4] - 2026-11-05
 
 ### Dependencies
