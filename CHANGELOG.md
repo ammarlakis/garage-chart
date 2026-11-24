@@ -1,4 +1,10 @@
 # Changelog
+## [0.10.7] - 2026-11-24
+
+### Dependencies
+
+- Update dxflrs/amd64_garage docker tag to v2.6.0 (#33)
+
 ## [0.10.6] - 2026-11-11
 
 ### Dependencies
